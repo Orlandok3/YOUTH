@@ -24,7 +24,6 @@ jobs:
           node-version: 12.x
       - name: npm install
         run: |
-          cd ./YOUTH
           npm install
           
       - name: '运行 【中青浏览赚】'
