@@ -30,7 +30,6 @@ jobs:
       - name: '运行 【中青浏览赚】'
         if: env.YOUTH_START
         run: |
-          cd ./YOUTH
           node youth_gain.js
         env:
           YOUTH_START: ${{ secrets.YOUTH_START }}
