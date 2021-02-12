@@ -12,6 +12,7 @@ Github Actions使用方法见[@lxk0301](https://raw.githubusercontent.com/lxk030
 const $ = new Env("中青看点")
 //const notify = $.isNode() ? require('./sendNotify') : '';
 let ReadArr = [], YouthBody = "",readscore = 0;
+var lastClick = Date.now()-60000;
   if (process.env.YOUTH_READ && process.env.YOUTH_READ.indexOf('&') > -1) {
   YouthBody = process.env.YOUTH_READ.split('&');
   console.log(`您选择的是用"&"隔开\n`)
@@ -38,9 +39,15 @@ let ReadArr = [], YouthBody = "",readscore = 0;
     if (ReadArr[i]) {
       articlebody = ReadArr[i];
       $.index = i + 1;
-      console.log(`-------------------------\n\n开始中青看点第${$.index}次阅读`)
-    }
+      console.log(`-------------------------\n\n开始中青看点第${$.index}次阅读`);
       await AutoRead();
+    };
+      if (process.env.YOUTH_TIME){
+        timebodyVal = process.env.YOUTH_TIME;
+      if(Date.now() - lastClick >=60000){
+        await readTime()
+      }
+    };
  }
    console.log(`-------------------------\n\n中青看点共完成${$.index}次阅读，共计获得${readscore}个青豆，阅读请求全部结束`)
 })()
@@ -50,14 +57,7 @@ let ReadArr = [], YouthBody = "",readscore = 0;
 
 function AutoRead() {
     return new Promise((resolve, reject) => {
-       let url = {
-            url: `https://ios.baertt.com/v5/article/complete.json`,
-            headers: {
-            'User-Agent': 'KDApp/1.7.8 (iPhone; iOS 14.0; Scale/3.00)'
-            },
-            body: articlebody
-        };
-        $.post(url, async(error, response, data) => {
+        $.post(batHost('article/complete.json',articlebody), async(error, response, data) => {
            let readres = JSON.parse(data);
              //console.log(data)
            if (readres.error_code == '0' && typeof readres.items.read_score === 'number') {
@@ -76,6 +76,31 @@ function AutoRead() {
               console.log(readres.items.max_notice)
             }
           resolve()
+        })
+    })
+}
+
+function batHost(api, body) {
+    return {
+        url: 'https://ios.baertt.com/v5/'+api,
+        headers: {
+            'User-Agent': 'KDApp/2.0.0 (iPhone; iOS 14.5; Scale/3.00)',
+            'Host': 'ios.baertt.com',
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: body
+    }
+}
+
+function readTime() {
+    return new Promise((resolve, reject) => {
+        $.post(batHost('user/stay.json',timebodyVal), (error, resp, data) => {
+            let timeres = JSON.parse(data)
+            if (timeres.error_code == 0) {
+                readtimes = timeres.time / 60
+              $.log(`阅读时长共计` + Math.floor(readtimes) + `分钟`)
+            }
+            resolve()
         })
     })
 }
