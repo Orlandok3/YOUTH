@@ -19,6 +19,8 @@ jobs:
         YOUTH_ARTBODY: ${{ secrets.YOUTH_ARTBODY }}
         YOUTH_REDBODY: ${{ secrets.YOUTH_REDBODY }}
         YOUTH_TIME: ${{ secrets.YOUTH_TIME }}
+        withdrawBody: ${{ secrets.withdrawBody }}
+        withdrawUrl: ${{ secrets.withdrawUrl }}
     steps:
       - name: Checkout
         run: |
