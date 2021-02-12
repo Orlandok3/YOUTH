@@ -6,7 +6,7 @@ name: youth(中青看点)
 on:
   workflow_dispatch:
   schedule:
-     - cron: '0/15 * * * *'
+     - cron: '0 * * 1 *'
   watch:
     types: youth
 
