@@ -12,8 +12,8 @@ let notifyInterval = $.getdata("notifytimes")||50 //通知间隔，默认抽奖�
 const notify = $.isNode() ? require('./sendNotify') : '';
 const ONCard = $.getdata('zqcard')||"true" //早起打卡开关
 const withdrawcash = $.getdata('zqcash')||30 //提现金额
-let withdrawUrl =$.getdata('cashurl_zq')
-let withdrawBody =$.getdata('cashbody_zq')
+let withdrawUrl = process.env.withdrawUrl
+let withdrawBody = process.env.withdrawBody
 let rotaryscore=0,doublerotary=0; 
 let cookieArr = [], cookie = '',
     readArr = [], articlebodyVal ='',
